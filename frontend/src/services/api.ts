@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'http://localhost:5000' });
+// THE FIX IS HERE: We use the Vercel environment variable
+const API = axios.create({ baseURL: import.meta.env.VITE_API_URL });
 
-// This function will run before every request
 API.interceptors.request.use((req) => {
   const profile = localStorage.getItem('profile');
   if (profile) {
