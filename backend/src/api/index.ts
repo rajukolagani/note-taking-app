@@ -12,7 +12,16 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware - CORRECT ORDER
 app.use(express.json());   // Parse JSON request bodies FIRST
-app.use(cors());           // Handle CORS after body is parsed
+
+// Configure CORS for your deployed frontend origin(s)
+const corsOptions = {
+    // This is the URL of your deployed frontend that will be making requests to this backend
+    origin: 'https://note-taking-app-vgf2.vercel.app',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // Allow cookies and authorization headers
+    optionsSuccessStatus: 204 // Handle pre-flight OPTIONS requests
+};
+app.use(cors(corsOptions)); // Use the configured corsOptions
 
 // Routes
 app.use('/api/auth', authRoutes);
