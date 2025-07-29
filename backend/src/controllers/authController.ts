@@ -20,6 +20,8 @@ export const register = async (req: Request, res: Response) => {
 
     res.status(201).json({ result: newUser, token });
   } catch (error) {
+    // --- ADDED THIS LINE ---
+    console.error("Error during registration:", error);
     res.status(500).json({ message: 'Something went wrong.' });
   }
 };
@@ -38,10 +40,16 @@ export const login = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Invalid credentials.' });
     }
 
-    const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, process.env.JWT_SECRET!, { expiresIn: '1h' });
+    // Ensure JWT_SECRET is available and not undefined before using it
+    if (!process.env.JWT_SECRET) {
+        throw new Error("JWT_SECRET is not defined in environment variables.");
+    }
+    const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.status(200).json({ result: existingUser, token });
   } catch (error) {
+    // --- ADDED THIS LINE ---
+    console.error("Error during login:", error);
     res.status(500).json({ message: 'Something went wrong.' });
   }
 };

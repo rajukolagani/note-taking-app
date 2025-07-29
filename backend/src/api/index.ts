@@ -2,18 +2,17 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import authRoutes from './routes/authRoutes';
-import noteRoutes from './routes/noteRoutes';
+import authRoutes from '../routes/authRoutes';
+import noteRoutes from '../routes/noteRoutes';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.options('*', cors()); // Handles the pre-flight requests
-app.use(cors());          // Handles all other CORS requests
-app.use(express.json());
+// Middleware - CORRECT ORDER
+app.use(express.json());   // Parse JSON request bodies FIRST
+app.use(cors());           // Handle CORS after body is parsed
 
 // Routes
 app.use('/api/auth', authRoutes);
